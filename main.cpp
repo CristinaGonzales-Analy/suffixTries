@@ -57,3 +57,45 @@ bool search(TrieNode* node, const string &pattern) {
     return node->children[endIndex] != nullptr &&
            node->children[endIndex]->isEndOfWord;
 }
+
+bool deleteHelper(TrieNode* node, const string &word, size_t depth) {
+    if (!node) return false;
+
+    if (depth == word.length()) {
+        int endIndex = charToIndex('$');
+        TrieNode* endNode = node->children[endIndex];
+        if (!endNode) return false;
+
+        endNode->isEndOfWord = false;
+
+        bool empty = true;
+        for (int i = 0; i < ALPHABET_SIZE; i++)
+            if (endNode->children[i]) empty = false;
+        if (empty) {
+            delete endNode;
+            node->children[endIndex] = nullptr;
+        }
+
+        for (int i = 0; i < ALPHABET_SIZE; i++)
+            if (node->children[i]) return false;
+        return !node->isEndOfWord;
+    }
+
+    int index = charToIndex(word[depth]);
+    if (!node->children[index]) return false;
+
+    bool shouldDeleteChild = deleteHelper(node->children[index], word, depth + 1);
+    if (shouldDeleteChild) {
+        delete node->children[index];
+        node->children[index] = nullptr;
+
+        for (int i = 0; i < ALPHABET_SIZE; i++)
+            if (node->children[i]) return false;
+        return !node->isEndOfWord;
+    }
+    return false;
+}
+
+void deleteSuffix(TrieNode* root, const string &word) {
+    deleteHelper(root, word, 0);
+}
