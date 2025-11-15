@@ -43,3 +43,17 @@ void buildSuffixTrie(TrieNode* root, const string &text) {
         i++;
     }
 }
+
+bool search(TrieNode* node, const string &pattern) {
+    size_t i = 0;
+    while (i < pattern.length()) {
+        int index = charToIndex(pattern[i]);
+        if (!node->children[index])
+            return false;
+        node = node->children[index];
+        i++;
+    }
+    int endIndex = charToIndex('$');
+    return node->children[endIndex] != nullptr &&
+           node->children[endIndex]->isEndOfWord;
+}
