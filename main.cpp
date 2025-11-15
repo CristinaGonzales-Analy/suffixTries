@@ -35,3 +35,11 @@ void insert(TrieNode* node, const string &word) {
         node->children[endIndex] = new TrieNode();
     node->children[endIndex]->isEndOfWord = true;
 }
+
+void buildSuffixTrie(TrieNode* root, const string &text) {
+    size_t i = 0;
+    while (i < text.length()) {
+        insert(root, text.substr(i));
+        i++;
+    }
+}
