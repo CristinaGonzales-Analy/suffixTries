@@ -99,3 +99,36 @@ bool deleteHelper(TrieNode* node, const string &word, size_t depth) {
 void deleteSuffix(TrieNode* root, const string &word) {
     deleteHelper(root, word, 0);
 }
+
+int main() {
+    string text = "banana";
+    TrieNode* root = new TrieNode();
+
+    buildSuffixTrie(root, text);
+
+    vector<string> tests;
+    tests.push_back("ana");
+    tests.push_back("banana");
+    tests.push_back("nan");
+    tests.push_back("nana");
+    tests.push_back("apple");
+
+    for (int i = 0; i < tests.size(); i++) {
+        cout << "Searching for '" << tests[i] << ":' it was ";
+        if (search(root, tests[i]))
+            cout << "found" << endl;
+        else
+            cout << "not found" << endl;
+    }
+
+    cout << "\n After deleting 'ana'...\n";
+    deleteSuffix(root, "ana");
+
+    cout << "Searching 'ana' again: ";
+    if (search(root, "ana"))
+        cout << "found" << endl;
+    else
+        cout << "not found" << endl;
+
+    return 0;
+}
